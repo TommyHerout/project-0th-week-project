@@ -6,6 +6,8 @@ public class Deadlocks
     {
         static readonly object firstLock = new object();
         static readonly object secondLock = new object();
+        static readonly object thirdLock = new object();
+        static readonly object fourthLock = new object();
         
         static void Main()
         {
@@ -25,6 +27,21 @@ public class Deadlocks
             }
             Console.WriteLine("Released secondLock");
             Console.Read();
+            
+            //------
+            
+            Thread thread1 = new Thread((ThreadStart)ObliviousFunction);
+            Thread thread2 = new Thread((ThreadStart)BlindFunction);
+
+            thread1.Start();
+            thread2.Start();
+
+            while (true)
+            {
+                // Stare at the two threads in deadlock.
+            }
+            
+            //------
         }       
         
         static void ThreadJob()
@@ -43,6 +60,27 @@ public class Deadlocks
                 Console.WriteLine("\t\t\t\tReleased secondLock");
             }
             Console.WriteLine("\t\t\t\tReleased firstLock");
+        }
+        public static void ObliviousFunction()
+        {
+            lock (thirdLock)
+            {
+                Thread.Sleep(1000); // Wait for the blind to lead
+                lock (fourthLock)
+                {
+                }
+            }
+        }
+
+        public static void BlindFunction()
+        {
+            lock (thirdLock)
+            {
+                Thread.Sleep(1000); // Wait for oblivion
+                lock (fourthLock)
+                {
+                }
+            }
         }
     }
 }
