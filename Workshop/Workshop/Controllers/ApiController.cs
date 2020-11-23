@@ -1,5 +1,6 @@
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Workshop.Models;
@@ -8,17 +9,21 @@ using Workshop.Services;
 
 namespace Workshop.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api")]
     public class ApiController : ControllerBase
     {
         private readonly PersonService personService;
+        private readonly JwtAuthenticationManager jwtAuthenticationManager;
 
-        public ApiController(PersonService personService)
+        public ApiController(PersonService personService, JwtAuthenticationManager jwtAuthenticationManager)
         {
             this.personService = personService;
+            this.jwtAuthenticationManager = jwtAuthenticationManager;
         }
         
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] RegisterRequestDto register)
         {
@@ -35,7 +40,8 @@ namespace Workshop.Controllers
             var user = await personService.Register(new Person(register));
             return Ok(new RegisterResponseDto(user));
         }
-
+        
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult> Login([FromBody] LoginRequestDto login)
         {
@@ -43,12 +49,13 @@ namespace Workshop.Controllers
             {
                 return StatusCode(406, new {error = "Please input all data"});
             }
-            
-            if (await personService.Login(login.Username, login.Password))
+
+            var token = await jwtAuthenticationManager.Authenticate(login.Username, login.Password);
+            if (token is null)
             {
-                return Ok(new {message = "You are successfully logged in."});
+                return Unauthorized(new {error = "Incorrect username or password"});
             }
-            return BadRequest(new {error = "Username or password is incorrect."});
+            return Ok(new {apiKey = token});
         }
     }
 }

@@ -19,14 +19,9 @@ namespace Workshop.Services
 
         public async Task<Person> Register(Person person)
         {
-            var register = applicationDbContext.Persons.Add(person).Entity;
+            var register = (await applicationDbContext.Persons.AddAsync(person)).Entity;
             await applicationDbContext.SaveChangesAsync();
             return register;
-        }
-        
-        public async Task<bool> Login(string username, string password)
-        {
-            return await applicationDbContext.Persons.AnyAsync(p => p.Username == username && p.Password == password.HashString());
         }
 
         public async Task<Person> DoesPersonExist(string username)
