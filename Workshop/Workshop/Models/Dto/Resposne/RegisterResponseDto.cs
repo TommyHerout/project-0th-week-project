@@ -1,17 +1,17 @@
 namespace Workshop.Models.Dto
 {
-    public class PersonResponseDto
+    public class RegisterResponseDto
     {
         public string Username { get; set; }
         public bool IsLibrarian { get; set; }
         
-        public PersonResponseDto(Person person)
+        public RegisterResponseDto(Person person)
         {
-            Username = person.Name;
+            Username = person.Username;
             IsLibrarian = person.IsLibrarian;
         }
 
-        public PersonResponseDto()
+        public RegisterResponseDto()
         {
         }
     }

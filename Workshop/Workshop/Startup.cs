@@ -42,6 +42,8 @@ namespace Workshop
             app.UseStaticFiles();
             app.UseDefaultFiles();
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
