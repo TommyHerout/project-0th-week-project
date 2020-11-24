@@ -81,7 +81,7 @@ namespace Workshop.Controllers
         public async Task<ActionResult> PromoteToLibrarian([FromBody] PromoteRequest person)
         {
             var exists = await personService.DoesPersonExist(person.Username);
-            if (!exists)
+            if (exists != null)
             {
                 return StatusCode(418, new {error = "No user with this username was found."}); 
             }

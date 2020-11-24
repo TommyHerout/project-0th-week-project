@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Workshop.Migrations
 {
-    public partial class Repeat : Migration
+    public partial class Library : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

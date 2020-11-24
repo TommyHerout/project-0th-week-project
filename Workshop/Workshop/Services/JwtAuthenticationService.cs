@@ -40,7 +40,7 @@ namespace Workshop.Services
                 {
                     new Claim(ClaimTypes.Name, username),
                 }),
-                Expires = DateTime.Now.AddHours(1),
+                Expires = DateTime.Now.AddHours(10),
                 SigningCredentials =
                     new SigningCredentials(
                         new SymmetricSecurityKey(tokenKey),

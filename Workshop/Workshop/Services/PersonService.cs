@@ -27,9 +27,9 @@ namespace Workshop.Services
             return register;
         }
 
-        public async Task<bool> DoesPersonExist(string username)
+        public async Task<Person> DoesPersonExist(string username)
         {
-            return await applicationDbContext.Persons.AnyAsync(p => p.Username == username);
+            return await applicationDbContext.Persons.FirstOrDefaultAsync(p => p.Username == username);
         }
 
         public async Task<Person> FindPersonByUsername(string username)
@@ -37,11 +37,11 @@ namespace Workshop.Services
             return await applicationDbContext.Persons.FirstOrDefaultAsync(p => p.Username == username);
         }
 
-        public async Task<int> Promote(PromoteRequest person)
+        public async Task Promote(PromoteRequest person)
         {
             var currentPerson = await FindPersonByUsername(person.Username);
             currentPerson.IsLibrarian ^= true;
-            return await applicationDbContext.SaveChangesAsync();
+            await applicationDbContext.SaveChangesAsync();
         }
     }
 }

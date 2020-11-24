@@ -9,8 +9,8 @@ using Workshop.Data;
 namespace Workshop.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201124131847_Repeat")]
-    partial class Repeat
+    [Migration("20201124183123_Library")]
+    partial class Library
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
