@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Workshop.Data;
 using Workshop.Extensions;
@@ -13,20 +14,23 @@ namespace Workshop.Services
     public class JwtAuthenticationManager
     {
         private readonly ApplicationDbContext applicationDbContext;
-        private readonly string apiKey = "My super awesome key";
+        private readonly string apiKey;
 
-        public JwtAuthenticationManager(ApplicationDbContext applicationDbContext)
+        public JwtAuthenticationManager(ApplicationDbContext applicationDbContext, IConfiguration configuration)
         {
             this.applicationDbContext = applicationDbContext;
+            this.apiKey = configuration.GetSection("ApiKey").Value;
         }
 
         public async Task<string> Authenticate(string username, string password)
         {
-            if (!await applicationDbContext.Persons.AnyAsync(
-                p => p.Username == username && p.Password == password.HashString()))
+            var user = await applicationDbContext.Persons.FirstOrDefaultAsync(
+                p => p.Username == username && p.Password == password.HashString());
+            
+            if (user is null)
             {
                 return null;
-            };
+            }
             
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenKey = Encoding.ASCII.GetBytes(apiKey);

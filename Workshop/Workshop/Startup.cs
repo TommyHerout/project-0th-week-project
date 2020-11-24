@@ -31,7 +31,6 @@ namespace Workshop
         {
             services.AddControllers();
             services.AddTransient<PersonService>();
-            string apiKey = "My super awesome key";
 
             services.AddAuthentication(x =>
             {
@@ -44,7 +43,7 @@ namespace Workshop
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(apiKey)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration.GetSection("ApiKey").Value)),
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
