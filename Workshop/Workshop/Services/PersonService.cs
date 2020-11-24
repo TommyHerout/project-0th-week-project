@@ -11,10 +11,12 @@ namespace Workshop.Services
     public class PersonService
     {
         private readonly ApplicationDbContext applicationDbContext;
+        private readonly BookService bookService;
 
-        public PersonService(ApplicationDbContext applicationDbContext)
+        public PersonService(ApplicationDbContext applicationDbContext, BookService bookService)
         {
             this.applicationDbContext = applicationDbContext;
+            this.bookService = bookService;
         }
 
         public async Task<Person> Register(Person person)
@@ -27,6 +29,11 @@ namespace Workshop.Services
         public async Task<Person> DoesPersonExist(string username)
         {
             return await applicationDbContext.Persons.FirstOrDefaultAsync(p => p.Username == username);
+        }
+
+        public async Task<Person> FindPersonById(int personId)
+        {
+            return await applicationDbContext.Persons.FirstOrDefaultAsync(p => p.Id == personId);
         }
     }
 }

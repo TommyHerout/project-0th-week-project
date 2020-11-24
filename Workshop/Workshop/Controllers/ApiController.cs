@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Workshop.Models;
 using Workshop.Models.Dto;
+using Workshop.Models.Dto.Responses;
 using Workshop.Services;
 
 namespace Workshop.Controllers
@@ -17,12 +19,15 @@ namespace Workshop.Controllers
     public class ApiController : ControllerBase
     {
         private readonly PersonService personService;
-        private readonly JwtAuthenticationManager jwtAuthenticationManager;
+        private readonly BookService bookService;
+        private readonly JwtAuthenticationService jwtAuthenticationService;
 
-        public ApiController(PersonService personService, JwtAuthenticationManager jwtAuthenticationManager)
+        public ApiController(PersonService personService, BookService bookService, JwtAuthenticationService jwtAuthenticationService)
         {
             this.personService = personService;
-            this.jwtAuthenticationManager = jwtAuthenticationManager;
+            this.bookService = bookService;
+            this.jwtAuthenticationService = jwtAuthenticationService;
+            
         }
         
         [AllowAnonymous]
@@ -51,13 +56,23 @@ namespace Workshop.Controllers
             {
                 return StatusCode(406, new {error = "Please input all data"});
             }
-
-            var token = await jwtAuthenticationManager.Authenticate(login.Username, login.Password);
+            var token = await jwtAuthenticationService.Authenticate(login.Username, login.Password);
             if (token is null)
             {
                 return Unauthorized(new {error = "Incorrect username or password"});
             }
             return Ok(new {apiKey = token});
+        }
+
+        [HttpGet("get-books")]
+        public async Task<ActionResult> GetAllBooks()
+        {
+            var allBooks = await bookService.GetAllBooks();
+            if (allBooks is null)
+            {
+                return StatusCode(418, new {error = "There are no books.. what?"});
+            }
+            return Ok(allBooks);
         }
     }
 }

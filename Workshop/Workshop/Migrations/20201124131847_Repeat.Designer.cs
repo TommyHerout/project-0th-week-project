@@ -9,8 +9,8 @@ using Workshop.Data;
 namespace Workshop.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201123195018_Username")]
-    partial class Username
+    [Migration("20201124131847_Repeat")]
+    partial class Repeat
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,6 +25,9 @@ namespace Workshop.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("CategoryId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsAvailable")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")

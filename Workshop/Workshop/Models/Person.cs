@@ -25,7 +25,6 @@ namespace Workshop.Models
 
         public Person()
         {
-            
         }
     }
 }

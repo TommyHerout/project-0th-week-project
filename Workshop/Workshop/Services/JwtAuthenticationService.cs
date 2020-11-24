@@ -11,12 +11,12 @@ using Workshop.Extensions;
 
 namespace Workshop.Services
 {
-    public class JwtAuthenticationManager
+    public class JwtAuthenticationService
     {
         private readonly ApplicationDbContext applicationDbContext;
         private readonly string apiKey;
 
-        public JwtAuthenticationManager(ApplicationDbContext applicationDbContext, IConfiguration configuration)
+        public JwtAuthenticationService(ApplicationDbContext applicationDbContext, IConfiguration configuration)
         {
             this.applicationDbContext = applicationDbContext;
             this.apiKey = configuration.GetSection("ApiKey").Value;

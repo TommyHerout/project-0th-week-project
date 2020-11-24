@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -29,8 +30,12 @@ namespace Workshop
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            
             services.AddTransient<PersonService>();
+            services.AddTransient<BookService>();
 
             services.AddAuthentication(x =>
             {
@@ -49,7 +54,7 @@ namespace Workshop
                 };
             });
 
-            services.AddScoped<JwtAuthenticationManager>();
+            services.AddScoped<JwtAuthenticationService>();
 
             services.AddDbContext<ApplicationDbContext>(builder =>
                 builder.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
