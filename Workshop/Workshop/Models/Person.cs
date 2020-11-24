@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Workshop.Extensions;
 using Workshop.Models.Dto;
+using Workshop.Models.Dto.Requests;
 
 namespace Workshop.Models
 {

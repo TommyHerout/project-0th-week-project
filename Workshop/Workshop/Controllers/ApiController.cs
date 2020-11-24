@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Workshop.Models;
 using Workshop.Models.Dto;
+using Workshop.Models.Dto.Requests;
 using Workshop.Models.Dto.Responses;
 using Workshop.Services;
 
@@ -22,7 +23,8 @@ namespace Workshop.Controllers
         private readonly BookService bookService;
         private readonly JwtAuthenticationService jwtAuthenticationService;
 
-        public ApiController(PersonService personService, BookService bookService, JwtAuthenticationService jwtAuthenticationService)
+        public ApiController(PersonService personService, BookService bookService,
+                             JwtAuthenticationService jwtAuthenticationService)
         {
             this.personService = personService;
             this.bookService = bookService;
@@ -45,7 +47,7 @@ namespace Workshop.Controllers
                 return BadRequest(new {error = "This username already exists.."}); 
             }
             var user = await personService.Register(new Person(register));
-            return Ok(new RegisterResponseDto(user));
+            return Ok(new RegisterResponse(user));
         }
         
         [AllowAnonymous]
@@ -64,15 +66,27 @@ namespace Workshop.Controllers
             return Ok(new {apiKey = token});
         }
 
-        [HttpGet("get-books")]
+        [HttpGet("get-book-list")]
         public async Task<ActionResult> GetAllBooks()
         {
             var allBooks = await bookService.GetAllBooks();
             if (allBooks is null)
             {
-                return StatusCode(418, new {error = "There are no books.. what?"});
+                return StatusCode(418, new {error = "There are no books in a library.. what?"});
             }
             return Ok(allBooks);
+        }
+
+        [HttpPost("promote")]
+        public async Task<ActionResult> PromoteToLibrarian([FromBody] PromoteRequest person)
+        {
+            var exists = await personService.DoesPersonExist(person.Username);
+            if (!exists)
+            {
+                return StatusCode(418, new {error = "No user with this username was found."}); 
+            }
+            await personService.Promote(person);
+            return Ok(new PromoteResponse());
         }
     }
 }

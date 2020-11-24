@@ -2,11 +2,11 @@ using System.Collections.Generic;
 
 namespace Workshop.Models.Dto.Responses
 {
-    public class GetBooksResponse
+    public class BookInfoResponse
     {
         public string Name { get; set; }
         public bool IsAvailable { get; set; }
-        public Category Category { get; set; }
-        public UserInfoResponse Person { get; set; }
+        public CategoryInfoResponse Category { get; set; }
+        public UserInfoResponse BookOwner { get; set; }
     }
 }

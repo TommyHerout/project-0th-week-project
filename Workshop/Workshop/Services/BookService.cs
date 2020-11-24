@@ -11,21 +11,21 @@ namespace Workshop.Services
     public class BookService
     {
         private readonly ApplicationDbContext applicationDbContext;
-
+        
         public BookService(ApplicationDbContext applicationDbContext)
         {
             this.applicationDbContext = applicationDbContext;
         }
 
-        public async Task<IEnumerable<GetBooksResponse>> GetAllBooks()
+        public async Task<IEnumerable<BookInfoResponse>> GetAllBooks()
         {
             var allBooks = await applicationDbContext.Books.Include(c => c.Category).Include(p => p.Person).ToListAsync();
-            var books = allBooks.Select(book => new GetBooksResponse
+            var books = allBooks.Select(book => new BookInfoResponse
             {
                 Name = book.Name,
                 IsAvailable = book.IsAvailable,
-                Category = book.Category,
-                Person = new UserInfoResponse(book.Person)
+                Category = new CategoryInfoResponse(book.Category),
+                BookOwner = new UserInfoResponse(book.Person)
             });
             return books;
         }

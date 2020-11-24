@@ -1,4 +1,4 @@
-namespace Workshop.Models.Dto
+namespace Workshop.Models.Dto.Requests
 {
     public class RegisterRequestDto
     {
