@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Workshop.Migrations
 {
-    public partial class Library : Migration
+    public partial class PropToBorrowInfo : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -71,12 +71,19 @@ namespace Workshop.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     BorrowedTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    ReturnedTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    PersonId = table.Column<int>(type: "INTEGER", nullable: true)
+                    ReturnTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    PersonId = table.Column<int>(type: "INTEGER", nullable: true),
+                    BookId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BorrowInfos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BorrowInfos_Books_BookId",
+                        column: x => x.BookId,
+                        principalTable: "Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_BorrowInfos_Persons_PersonId",
                         column: x => x.PersonId,
@@ -96,6 +103,11 @@ namespace Workshop.Migrations
                 column: "PersonId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BorrowInfos_BookId",
+                table: "BorrowInfos",
+                column: "BookId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BorrowInfos_PersonId",
                 table: "BorrowInfos",
                 column: "PersonId");
@@ -104,10 +116,10 @@ namespace Workshop.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Books");
+                name: "BorrowInfos");
 
             migrationBuilder.DropTable(
-                name: "BorrowInfos");
+                name: "Books");
 
             migrationBuilder.DropTable(
                 name: "Categories");

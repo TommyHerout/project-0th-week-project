@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Workshop.Data;
+using Workshop.Extensions;
 using Workshop.Models;
 using Workshop.Services;
 
@@ -33,7 +34,8 @@ namespace Workshop
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-            
+
+            services.AddHttpContextAccessor();
             services.AddTransient<PersonService>();
             services.AddTransient<BookService>();
 

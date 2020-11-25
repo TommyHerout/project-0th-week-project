@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Workshop.Data;
 using Workshop.Models;
+using Workshop.Models.Dto.Requests;
 using Workshop.Models.Dto.Responses;
 using static System.String;
 
@@ -33,22 +34,9 @@ namespace Workshop.Services
             return books;
         }
         
-        private async Task<Book> FindBookById(int bookId)
-        {
-            return await applicationDbContext.Books.FirstOrDefaultAsync(b => b.Id == bookId);
-        }
-        
-        private async Task<Book> FindBookByName(string bookName)
-        {
-            return await applicationDbContext.Books.FirstOrDefaultAsync(b => b.Name == bookName);
-        }
-        
-        public async Task BorrowBook(Book book)
-        {
-            var read = await FindBookById(book.Id);
-            read.IsAvailable = book.IsAvailable = false;
-            read.Person.Id = book.Person.Id;
-            await applicationDbContext.SaveChangesAsync();
-        }
+         public async Task<Book> FindBookById(int bookId)
+         {
+             return await applicationDbContext.Books.FirstOrDefaultAsync(b => b.Id == bookId);
+         }
     }
 }

@@ -1,12 +1,13 @@
+#nullable enable
 namespace Workshop.Models.Dto.Responses
 {
     public class CategoryInfoResponse
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
-        public CategoryInfoResponse(Category category)
+        public CategoryInfoResponse(Category? category)
         {
-            Name = category.Name;
+            Name = category?.Name;
         }
     }
 }

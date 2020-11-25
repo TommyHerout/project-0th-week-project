@@ -9,8 +9,8 @@ using Workshop.Data;
 namespace Workshop.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201124183123_Library")]
-    partial class Library
+    [Migration("20201124220817_PropToBorrowInfo")]
+    partial class PropToBorrowInfo
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -51,16 +51,21 @@ namespace Workshop.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("BookId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("BorrowedTime")
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("PersonId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("ReturnedTime")
+                    b.Property<DateTime>("ReturnTime")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BookId");
 
                     b.HasIndex("PersonId");
 
@@ -121,9 +126,15 @@ namespace Workshop.Migrations
 
             modelBuilder.Entity("Workshop.Models.BorrowInfo", b =>
                 {
+                    b.HasOne("Workshop.Models.Book", "Book")
+                        .WithMany()
+                        .HasForeignKey("BookId");
+
                     b.HasOne("Workshop.Models.Person", "Person")
                         .WithMany("BorrowInfos")
                         .HasForeignKey("PersonId");
+
+                    b.Navigation("Book");
 
                     b.Navigation("Person");
                 });
