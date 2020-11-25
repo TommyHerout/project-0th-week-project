@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Workshop.Extensions;
 using Workshop.Models.Dto.Requests;
 using Workshop.Models.Dto.Responses;
 using Workshop.Services;
@@ -28,7 +29,7 @@ namespace Workshop.Controllers
 
             if (exists is null)
             {
-                return StatusCode(404, new {error = "Who?"});
+                return BadRequest(new ErrorResponse(ErrorTypes.Empty.EnumDescription()));
             }
             await personService.Promote(person);
             return Ok(new PromoteResponse());
@@ -39,7 +40,7 @@ namespace Workshop.Controllers
         {
             if (request is null)
             {
-                return StatusCode(404);
+                return BadRequest(new ErrorResponse(ErrorTypes.Empty.EnumDescription()));
             }
             var response = await categoryService.AssignToCategory(request.BookId, request.CategoryId);
             return Ok(new AssignCategoryResponse(response));

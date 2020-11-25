@@ -93,7 +93,7 @@ namespace Workshop.Controllers
 
             if (book is null || !book.IsAvailable)
             {
-                return BadRequest(new ErrorResponse(ErrorTypes.Empty.EnumDescription()));
+                return BadRequest(new ErrorResponse(ErrorTypes.NotFound.EnumDescription()));
             }
 
             var borrow = new BorrowInfo(person, book);
