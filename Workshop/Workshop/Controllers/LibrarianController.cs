@@ -14,13 +14,11 @@ namespace Workshop.Controllers
     {
         private readonly PersonService personService;
         private readonly CategoryService categoryService;
-        private readonly BookService bookService;
 
-        public LibrarianController(PersonService personService, CategoryService categoryService, BookService bookService)
+        public LibrarianController(PersonService personService, CategoryService categoryService)
         {
             this.personService = personService;
             this.categoryService = categoryService;
-            this.bookService = bookService;
         }
         
         [HttpPost("promote")]

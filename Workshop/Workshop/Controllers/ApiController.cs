@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,12 +44,12 @@ namespace Workshop.Controllers
             if (string.IsNullOrEmpty(register.Name) || string.IsNullOrEmpty(register.Username) ||
                 string.IsNullOrEmpty(register.Password))
             {
-                return BadRequest(new {error = "Please input all data"});
+                return BadRequest(new ErrorResponse(ErrorTypes.DataMissing.EnumDescription()));
             }
             var doesExists = await personService.FindPersonByUsername(register.Username);
             if (doesExists != null)
             {
-                return BadRequest(new {error = "This username already exists.."});
+                return BadRequest(new ErrorResponse(ErrorTypes.UsernameExists.EnumDescription()));
             }
             var user = await personService.Register(new Person(register));
             return Ok(new RegisterResponse(user));
@@ -60,13 +61,13 @@ namespace Workshop.Controllers
         {
             if (string.IsNullOrEmpty(login.Username) || string.IsNullOrEmpty(login.Password))
             {
-                return StatusCode(406, new {error = "Please input all data"});
+                return BadRequest(new ErrorResponse(ErrorTypes.DataMissing.EnumDescription()));
             }
 
             var token = await jwtAuthenticationService.Authenticate(login.Username, login.Password);
             if (token is null)
             {
-                return Unauthorized(new {error = "Incorrect username or password"});
+                return Unauthorized(new ErrorResponse(ErrorTypes.IncorrectCredentials.EnumDescription()));
             }
             return Ok(new {apiKey = token});
         }
@@ -77,7 +78,7 @@ namespace Workshop.Controllers
             var allBooks = await bookService.GetAllBooks();
             if (allBooks is null)
             {
-                return StatusCode(418, new {error = "There are no books in a library.. what?"});
+                return BadRequest(new ErrorResponse(ErrorTypes.Empty.EnumDescription()));
             }
             return Ok(allBooks);
         }
@@ -92,7 +93,7 @@ namespace Workshop.Controllers
 
             if (book is null || !book.IsAvailable)
             {
-                return StatusCode(404, new {error = "No book with this ID was found. It is currently borrowed or it doesn't exists."});
+                return BadRequest(new ErrorResponse(ErrorTypes.Empty.EnumDescription()));
             }
 
             var borrow = new BorrowInfo(person, book);
