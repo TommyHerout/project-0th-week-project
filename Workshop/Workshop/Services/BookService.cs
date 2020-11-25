@@ -26,6 +26,7 @@ namespace Workshop.Services
             
             var books = allBooks!.Select(book => new BookInfoResponse
             {
+                Id = book.Id,
                 Name = book.Name,
                 IsAvailable = book.IsAvailable,
                 Category = new CategoryInfoResponse(book.Category),
@@ -42,6 +43,7 @@ namespace Workshop.Services
          public async Task UpdateBookOwner(Book book, Person person)
          {
              book.Person = person;
+             book.IsAvailable = false;
              applicationDbContext.Update(book);
              await applicationDbContext.SaveChangesAsync();
          }

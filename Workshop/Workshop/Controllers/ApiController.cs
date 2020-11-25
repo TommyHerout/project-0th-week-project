@@ -18,7 +18,7 @@ namespace Workshop.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api")]
+    [Route("customer")]
     public class ApiController : ControllerBase
     {
         private readonly PersonService personService;
@@ -81,21 +81,6 @@ namespace Workshop.Controllers
             }
             return Ok(allBooks);
         }
-        
-        //Roles = "True"  --- IsLibrarian (boolean)
-        [Authorize(Roles = "True")]
-        [HttpPost("promote")]
-        public async Task<ActionResult> PromoteToLibrarian([FromBody] PromoteRequest person)
-        {
-            var exists = personService.DoesPersonExists(person.Username);
-
-            if (exists is null)
-            {
-                return StatusCode(404, new {error = "Who?"});
-            }
-            await personService.Promote(person);
-            return Ok(new PromoteResponse());
-        }
 
         [HttpPost("borrow")]
         public async Task<ActionResult> BorrowBook([FromBody] BorrowRequest borrowRequest)
@@ -105,9 +90,9 @@ namespace Workshop.Controllers
             var book = await bookService.FindBookById(borrowRequest.BookId);
             var person = await personService.FindPersonByUsername(currentPerson);
 
-            if (book is null)
+            if (book is null || !book.IsAvailable)
             {
-                return StatusCode(418, new {error = "No book with this ID was found,."});
+                return StatusCode(404, new {error = "No book with this ID was found. It is currently borrowed or it doesn't exists."});
             }
 
             var borrow = new BorrowInfo(person, book);
