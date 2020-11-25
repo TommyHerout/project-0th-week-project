@@ -13,10 +13,14 @@ namespace Workshop.Controllers
     public class LibrarianController : ControllerBase
     {
         private readonly PersonService personService;
+        private readonly CategoryService categoryService;
+        private readonly BookService bookService;
 
-        public LibrarianController(PersonService personService)
+        public LibrarianController(PersonService personService, CategoryService categoryService, BookService bookService)
         {
             this.personService = personService;
+            this.categoryService = categoryService;
+            this.bookService = bookService;
         }
         
         [HttpPost("promote")]
@@ -30,6 +34,17 @@ namespace Workshop.Controllers
             }
             await personService.Promote(person);
             return Ok(new PromoteResponse());
+        }
+
+        [HttpPost("assign")]
+        public async Task<ActionResult> AssignToCategory([FromBody] AssignCategoryRequest request)
+        {
+            if (request is null)
+            {
+                return StatusCode(404);
+            }
+            var response = await categoryService.AssignToCategory(request.BookId, request.CategoryId);
+            return Ok(new AssignCategoryResponse(response));
         }
     }
 }
