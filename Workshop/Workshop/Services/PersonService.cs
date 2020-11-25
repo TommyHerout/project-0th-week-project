@@ -36,6 +36,11 @@ namespace Workshop.Services
             return await applicationDbContext.Persons.FirstOrDefaultAsync(p => p.Username == username);
         }
         
+        public Person DoesPersonExists(string username)
+        {
+            return applicationDbContext.Persons.FirstOrDefault(p => p.Username == username);
+        }
+        
         public async Task<Person> FindPersonById(int personId)
         {
             return await applicationDbContext.Persons.FirstOrDefaultAsync(p => p.Id == personId);
@@ -50,7 +55,7 @@ namespace Workshop.Services
         public async Task Promote(PromoteRequest person)
         {
             var currentPerson = await FindPersonByUsername(person.Username);
-            currentPerson.IsLibrarian ^= true;
+            currentPerson.IsLibrarian = true;
             await applicationDbContext.SaveChangesAsync();
         }
         

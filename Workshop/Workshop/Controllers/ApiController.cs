@@ -27,8 +27,8 @@ namespace Workshop.Controllers
         private readonly CategoryService categoryService;
 
         public ApiController(PersonService personService, BookService bookService,
-            JwtAuthenticationService jwtAuthenticationService,
-            CategoryService categoryService)
+                             JwtAuthenticationService jwtAuthenticationService,
+                             CategoryService categoryService)
         {
             this.personService = personService;
             this.bookService = bookService;
@@ -45,13 +45,11 @@ namespace Workshop.Controllers
             {
                 return BadRequest(new {error = "Please input all data"});
             }
-
             var doesExists = await personService.FindPersonByUsername(register.Username);
             if (doesExists != null)
             {
                 return BadRequest(new {error = "This username already exists.."});
             }
-
             var user = await personService.Register(new Person(register));
             return Ok(new RegisterResponse(user));
         }
@@ -70,10 +68,9 @@ namespace Workshop.Controllers
             {
                 return Unauthorized(new {error = "Incorrect username or password"});
             }
-
             return Ok(new {apiKey = token});
         }
-
+        
         [HttpGet("get-book-list")]
         public async Task<ActionResult> GetAllBooks()
         {
@@ -82,19 +79,20 @@ namespace Workshop.Controllers
             {
                 return StatusCode(418, new {error = "There are no books in a library.. what?"});
             }
-
             return Ok(allBooks);
         }
-
+        
+        //Roles = "True"  --- IsLibrarian (boolean)
+        [Authorize(Roles = "True")]
         [HttpPost("promote")]
         public async Task<ActionResult> PromoteToLibrarian([FromBody] PromoteRequest person)
         {
-            var exists = await personService.FindPersonByUsername(person.Username);
-            if (exists == null)
-            {
-                return StatusCode(418, new {error = "No user with this username was found."});
-            }
+            var exists = personService.DoesPersonExists(person.Username);
 
+            if (exists is null)
+            {
+                return StatusCode(404, new {error = "Who?"});
+            }
             await personService.Promote(person);
             return Ok(new PromoteResponse());
         }
