@@ -38,6 +38,7 @@ namespace Workshop
             services.AddHttpContextAccessor();
             services.AddTransient<PersonService>();
             services.AddTransient<BookService>();
+            services.AddTransient<CategoryService>();
 
             services.AddAuthentication(x =>
             {

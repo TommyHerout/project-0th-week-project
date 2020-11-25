@@ -4,9 +4,8 @@ namespace Workshop.Models.Dto.Responses
 {
     public class BorrowResponse
     {
-
-        public DateTime BorrowedTime { get; set; } = DateTime.Now;
-        public DateTime ReturnTime { get; set; } = DateTime.Now.AddDays(10);
+        public DateTime BorrowedTime { get; set; }
+        public DateTime ReturnTime { get; set; }
         
         public BorrowResponse(BorrowInfo borrow)
         {

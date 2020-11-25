@@ -12,6 +12,18 @@ namespace Workshop.Models
         public bool IsAvailable { get; set; }
         public Category Category { get; set; }
         public Person Person { get; set; }
+        
+        public Book(string name, bool isAvailable, Category category, Person person)
+        {
+            Name = name;
+            IsAvailable = isAvailable;
+            Person = person;
+        }
+
+        public Book(Person person)
+        {
+            Person = person;
+        }
 
         public Book()
         {

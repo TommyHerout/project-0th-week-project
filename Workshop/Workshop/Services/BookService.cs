@@ -14,7 +14,7 @@ namespace Workshop.Services
     public class BookService
     {
         private readonly ApplicationDbContext applicationDbContext;
-        
+
         public BookService(ApplicationDbContext applicationDbContext)
         {
             this.applicationDbContext = applicationDbContext;
@@ -37,6 +37,13 @@ namespace Workshop.Services
          public async Task<Book> FindBookById(int bookId)
          {
              return await applicationDbContext.Books.FirstOrDefaultAsync(b => b.Id == bookId);
+         }
+         
+         public async Task UpdateBookOwner(Book book, Person person)
+         {
+             book.Person = person;
+             applicationDbContext.Update(book);
+             await applicationDbContext.SaveChangesAsync();
          }
     }
 }

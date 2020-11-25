@@ -24,13 +24,16 @@ namespace Workshop.Controllers
         private readonly PersonService personService;
         private readonly BookService bookService;
         private readonly JwtAuthenticationService jwtAuthenticationService;
+        private readonly CategoryService categoryService;
 
         public ApiController(PersonService personService, BookService bookService,
-            JwtAuthenticationService jwtAuthenticationService)
+            JwtAuthenticationService jwtAuthenticationService,
+            CategoryService categoryService)
         {
             this.personService = personService;
             this.bookService = bookService;
             this.jwtAuthenticationService = jwtAuthenticationService;
+            this.categoryService = categoryService;
         }
 
         [AllowAnonymous]
@@ -101,16 +104,17 @@ namespace Workshop.Controllers
         {
             var currentPerson = personService.GetPersonJwtUsername();
             
-            var bookId = await bookService.FindBookById(borrowRequest.BookId);
-            var personId = await personService.FindPersonByUsername(currentPerson);
+            var book = await bookService.FindBookById(borrowRequest.BookId);
+            var person = await personService.FindPersonByUsername(currentPerson);
 
-            if (bookId is null)
+            if (book is null)
             {
                 return StatusCode(418, new {error = "No book with this ID was found,."});
             }
 
-            var borrow = new BorrowInfo(personId, bookId);
+            var borrow = new BorrowInfo(person, book);
             await personService.BorrowBook(borrow);
+            await bookService.UpdateBookOwner(book, person);
             return Ok(new BorrowResponse(borrow));
         }
     }
