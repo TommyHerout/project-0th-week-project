@@ -25,6 +25,11 @@ namespace Workshop.Services
             this.context = context;
         }
 
+        public async Task<IEnumerable<Person>> GetAllCustomers()
+        {
+            return await applicationDbContext.Persons.ToListAsync();
+        }
+
         public async Task<Person> Register(Person person)
         {
             var register = (await applicationDbContext.Persons.AddAsync(person)).Entity;

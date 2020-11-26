@@ -14,14 +14,14 @@ namespace Workshop.Controllers
     [Authorize]
     [ApiController]
     [Route("customer")]
-    public class ApiController : ControllerBase
+    public class CustomerController : ControllerBase
     {
         private readonly IPersonService personService;
         private readonly IBookService bookService;
         private readonly IJwtAuthenticationService jwtAuthenticationService;
         private readonly IMapper mapper;
 
-        public ApiController(IPersonService personService, IBookService bookService,
+        public CustomerController(IPersonService personService, IBookService bookService,
                              IJwtAuthenticationService jwtAuthenticationService,
                              IMapper mapper)
         {
@@ -29,6 +29,11 @@ namespace Workshop.Controllers
             this.bookService = bookService;
             this.jwtAuthenticationService = jwtAuthenticationService;
             this.mapper = mapper;
+        }
+
+        public CustomerController(IJwtAuthenticationService test)
+        {
+            
         }
 
         [AllowAnonymous]
