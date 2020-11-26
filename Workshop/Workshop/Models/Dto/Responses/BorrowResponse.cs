@@ -12,5 +12,10 @@ namespace Workshop.Models.Dto.Responses
             BorrowedTime = borrow.BorrowedTime;
             ReturnTime = borrow.ReturnTime;
         }
+
+        public BorrowResponse()
+        {
+            
+        }
     }
 }

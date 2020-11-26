@@ -1,16 +1,9 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Workshop.Extensions;
 using Workshop.Models;
-using Workshop.Models.Dto;
 using Workshop.Models.Dto.Requests;
 using Workshop.Models.Dto.Responses;
 using Workshop.Services;
@@ -25,16 +18,16 @@ namespace Workshop.Controllers
         private readonly PersonService personService;
         private readonly BookService bookService;
         private readonly JwtAuthenticationService jwtAuthenticationService;
-        private readonly CategoryService categoryService;
+        private readonly IMapper mapper;
 
         public ApiController(PersonService personService, BookService bookService,
                              JwtAuthenticationService jwtAuthenticationService,
-                             CategoryService categoryService)
+                             IMapper mapper)
         {
             this.personService = personService;
             this.bookService = bookService;
             this.jwtAuthenticationService = jwtAuthenticationService;
-            this.categoryService = categoryService;
+            this.mapper = mapper;
         }
 
         [AllowAnonymous]
@@ -52,7 +45,9 @@ namespace Workshop.Controllers
                 return BadRequest(new ErrorResponse(ErrorTypes.UsernameExists.EnumDescription()));
             }
             var user = await personService.Register(new Person(register));
-            return Ok(new RegisterResponse(user));
+
+            var registerMapper = mapper.Map<RegisterResponse>(user);
+            return Ok(registerMapper);
         }
 
         [AllowAnonymous]
@@ -99,7 +94,9 @@ namespace Workshop.Controllers
             var borrow = new BorrowInfo(person, book);
             await personService.BorrowBook(borrow);
             await bookService.UpdateBookOwner(book, person);
-            return Ok(new BorrowResponse(borrow));
+            
+            var borrowMapper = mapper.Map<BorrowResponse>(borrow);
+            return Ok(borrowMapper);
         }
     }
 }

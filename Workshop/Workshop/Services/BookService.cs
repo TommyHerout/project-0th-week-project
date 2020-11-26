@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Workshop.Data;
 using Workshop.Models;
@@ -14,24 +15,26 @@ namespace Workshop.Services
     public class BookService
     {
         private readonly ApplicationDbContext applicationDbContext;
+        private readonly IMapper mapper;
 
-        public BookService(ApplicationDbContext applicationDbContext)
+        public BookService(ApplicationDbContext applicationDbContext, IMapper mapper)
         {
             this.applicationDbContext = applicationDbContext;
+            this.mapper = mapper;
         }
 
         public async Task<IEnumerable<BookInfoResponse>> GetAllBooks()
         {
             var allBooks = await applicationDbContext.Books.Include(c => c.Category).Include(p => p.Person).ToListAsync();
             
-            var books = allBooks!.Select(book => new BookInfoResponse
-            {
-                Id = book.Id,
-                Name = book.Name,
-                IsAvailable = book.IsAvailable,
-                Category = new CategoryInfoResponse(book.Category),
-                BookOwner = allBooks.Any(b => b.Person != null) ? new UserInfoResponse(book.Person) : null
-            });
+             var books = allBooks!.Select(book => new BookInfoResponse
+             {
+                 Id = book.Id,
+                 Name = book.Name,
+                 IsAvailable = book.IsAvailable,
+                 Category = new CategoryInfoResponse(book.Category),
+                 BookOwner = allBooks.Any(b => b.Person != null) ? new UserInfoResponse(book.Person) : null
+             });
             return books;
         }
         

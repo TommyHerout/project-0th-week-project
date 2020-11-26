@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 using Workshop.Data;
 using Workshop.Extensions;
 using Workshop.Models;
+using Workshop.Models.Dto.Mappings;
 using Workshop.Services;
 
 namespace Workshop
@@ -34,11 +37,13 @@ namespace Workshop
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-
+            
             services.AddHttpContextAccessor();
+            services.AddAutoMapper(typeof(MappingProfile));
             services.AddTransient<PersonService>();
             services.AddTransient<BookService>();
             services.AddTransient<CategoryService>();
+            
 
             services.AddAuthentication(x =>
             {
@@ -56,11 +61,24 @@ namespace Workshop
                     ValidateAudience = false
                 };
             });
-
+            
             services.AddScoped<JwtAuthenticationService>();
-
-            services.AddDbContext<ApplicationDbContext>(builder =>
-                builder.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
+            
+            
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Test")
+            {
+                services.AddDbContext<ApplicationDbContext>(options =>
+                {
+                    var connect = new SqliteConnection("DataSource=:memory:");
+                    connect.Open();
+                    options.UseSqlite(connect);
+                });
+            }
+            else
+            {    
+                services.AddDbContext<ApplicationDbContext>(builder =>
+                    builder.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
+            }
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
