@@ -8,19 +8,18 @@ using Workshop.Data;
 using Workshop.Models;
 using Workshop.Models.Dto.Requests;
 using Workshop.Models.Dto.Responses;
+using Workshop.Services.Interfaces;
 using static System.String;
 
 namespace Workshop.Services
 {
-    public class BookService
+    public class BookService : IBookService
     {
         private readonly ApplicationDbContext applicationDbContext;
-        private readonly IMapper mapper;
 
-        public BookService(ApplicationDbContext applicationDbContext, IMapper mapper)
+        public BookService(ApplicationDbContext applicationDbContext)
         {
             this.applicationDbContext = applicationDbContext;
-            this.mapper = mapper;
         }
 
         public async Task<IEnumerable<BookInfoResponse>> GetAllBooks()

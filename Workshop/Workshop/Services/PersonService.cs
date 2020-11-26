@@ -10,10 +10,11 @@ using Workshop.Extensions;
 using Workshop.Models;
 using Workshop.Models.Dto;
 using Workshop.Models.Dto.Requests;
+using Workshop.Services.Interfaces;
 
 namespace Workshop.Services
 {
-    public class PersonService
+    public class PersonService : IPersonService
     {
         private readonly ApplicationDbContext applicationDbContext;
         private readonly IHttpContextAccessor context;

@@ -5,6 +5,7 @@ using Workshop.Extensions;
 using Workshop.Models.Dto.Requests;
 using Workshop.Models.Dto.Responses;
 using Workshop.Services;
+using Workshop.Services.Interfaces;
 
 namespace Workshop.Controllers
 {
@@ -13,10 +14,10 @@ namespace Workshop.Controllers
     [Route("librarian")]
     public class LibrarianController : ControllerBase
     {
-        private readonly PersonService personService;
-        private readonly CategoryService categoryService;
+        private readonly IPersonService personService;
+        private readonly ICategoryService categoryService;
 
-        public LibrarianController(PersonService personService, CategoryService categoryService)
+        public LibrarianController(IPersonService personService, ICategoryService categoryService)
         {
             this.personService = personService;
             this.categoryService = categoryService;

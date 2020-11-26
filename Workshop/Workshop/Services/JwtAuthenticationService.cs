@@ -9,10 +9,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Workshop.Data;
 using Workshop.Extensions;
+using Workshop.Services.Interfaces;
 
 namespace Workshop.Services
 {
-    public class JwtAuthenticationService
+    public class JwtAuthenticationService : IJwtAuthenticationService
     {
         private readonly ApplicationDbContext applicationDbContext;
         private readonly string apiKey;

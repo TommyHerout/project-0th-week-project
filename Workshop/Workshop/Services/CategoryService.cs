@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Workshop.Data;
 using Workshop.Models;
 using Workshop.Models.Dto.Requests;
+using Workshop.Services.Interfaces;
 
 namespace Workshop.Services
 {
-    public class CategoryService
+    public class CategoryService : ICategoryService
     {
         private readonly ApplicationDbContext applicationDbContext;
         

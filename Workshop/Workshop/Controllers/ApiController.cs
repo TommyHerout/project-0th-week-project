@@ -7,6 +7,7 @@ using Workshop.Models;
 using Workshop.Models.Dto.Requests;
 using Workshop.Models.Dto.Responses;
 using Workshop.Services;
+using Workshop.Services.Interfaces;
 
 namespace Workshop.Controllers
 {
@@ -15,13 +16,13 @@ namespace Workshop.Controllers
     [Route("customer")]
     public class ApiController : ControllerBase
     {
-        private readonly PersonService personService;
-        private readonly BookService bookService;
-        private readonly JwtAuthenticationService jwtAuthenticationService;
+        private readonly IPersonService personService;
+        private readonly IBookService bookService;
+        private readonly IJwtAuthenticationService jwtAuthenticationService;
         private readonly IMapper mapper;
 
-        public ApiController(PersonService personService, BookService bookService,
-                             JwtAuthenticationService jwtAuthenticationService,
+        public ApiController(IPersonService personService, IBookService bookService,
+                             IJwtAuthenticationService jwtAuthenticationService,
                              IMapper mapper)
         {
             this.personService = personService;

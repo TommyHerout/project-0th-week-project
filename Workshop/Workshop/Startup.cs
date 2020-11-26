@@ -20,6 +20,7 @@ using Workshop.Extensions;
 using Workshop.Models;
 using Workshop.Models.Dto.Mappings;
 using Workshop.Services;
+using Workshop.Services.Interfaces;
 
 namespace Workshop
 {
@@ -40,9 +41,10 @@ namespace Workshop
             
             services.AddHttpContextAccessor();
             services.AddAutoMapper(typeof(MappingProfile));
-            services.AddTransient<PersonService>();
-            services.AddTransient<BookService>();
-            services.AddTransient<CategoryService>();
+            services.AddTransient<IPersonService, PersonService>();
+            services.AddTransient<IBookService, BookService>();
+            services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IJwtAuthenticationService, JwtAuthenticationService>();
             
 
             services.AddAuthentication(x =>
@@ -61,10 +63,7 @@ namespace Workshop
                     ValidateAudience = false
                 };
             });
-            
-            services.AddScoped<JwtAuthenticationService>();
-            
-            
+
             if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Test")
             {
                 services.AddDbContext<ApplicationDbContext>(options =>
