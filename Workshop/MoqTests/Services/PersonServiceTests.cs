@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -13,13 +14,12 @@ namespace MoqTests
         [Fact]
         public void Login_Returns_Unauthorized()
         {
-            LoginRequestDto userNull = null;
+            var user = new LoginRequestDto {Username = "Tommy", Password = "tommy"};
             var mockUserService = new Mock<IJwtAuthenticationService>();
             mockUserService.Setup(m => m.Authenticate(null, null)).Returns(() => null);
-            var controller = new CustomerController(mockUserService.Object);
-            var result = controller.Login(null);
-            
-            Assert.IsType<Task<ActionResult>>(result);
+            var controller = new CustomerController(null, null, mockUserService.Object, null);
+            var result = controller.Login(user);
+            Assert.IsType<UnauthorizedObjectResult>(result.Result);
         }
     }
 }
