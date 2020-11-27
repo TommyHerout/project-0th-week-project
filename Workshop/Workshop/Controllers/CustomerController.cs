@@ -31,11 +31,6 @@ namespace Workshop.Controllers
             this.mapper = mapper;
         }
 
-        public CustomerController(IJwtAuthenticationService test)
-        {
-            
-        }
-
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] RegisterRequestDto register)
@@ -65,12 +60,12 @@ namespace Workshop.Controllers
                 return BadRequest(new ErrorResponse(ErrorTypes.DataMissing.EnumDescription()));
             }
 
-            var token = await jwtAuthenticationService.Authenticate(login.Username, login.Password);
-            if (token is null)
+            var user = await jwtAuthenticationService.Authenticate(login.Username, login.Password);
+            if (user is null)
             {
                 return Unauthorized(new ErrorResponse(ErrorTypes.IncorrectCredentials.EnumDescription()));
             }
-            return Ok(new {apiKey = token});
+            return Ok(new {apiKey = user});
         }
         
         [HttpGet("get-book-list")]
