@@ -6,6 +6,7 @@ using Moq;
 using Workshop.Controllers;
 using Workshop.Models;
 using Workshop.Models.Dto.Requests;
+using Workshop.Services;
 using Workshop.Services.Interfaces;
 using Xunit;
 
@@ -17,9 +18,7 @@ namespace MoqTests
         public void Login_Returns_Unauthorized()
         {
             var user = new LoginRequestDto {Username = "Tommy", Password = "tommy"};
-            
             var mockUserService = new Mock<IJwtAuthenticationService>();
-            
             mockUserService.Setup(m => m.Authenticate(null,  null)).Returns(() => null);
             var controller = new CustomerController(null, null, mockUserService.Object, null);
             var result = controller.Login(user);
@@ -35,6 +34,17 @@ namespace MoqTests
             var controller = new CustomerController(null, null, mockUserService.Object, null);
             var result = controller.Login(user);
             Assert.IsType<OkObjectResult>(result.Result);
+        }
+
+        [Fact]
+        public void Register_Returns_NoInput()
+        {
+            var user = new RegisterRequestDto {Name = null, Username = null, Password = null};
+            var mockUserService = new Mock<IPersonService>();
+            mockUserService.Setup(m => m.Register(null)).Returns(() => null);
+            var controller = new CustomerController(mockUserService.Object, null, null, null);
+            var result = controller.Register(user);
+            Assert.IsType<BadRequestObjectResult>(result.Result);
         }
     }
 }
