@@ -30,6 +30,7 @@ namespace Workshop.Controllers
             this.jwtAuthenticationService = jwtAuthenticationService;
             this.mapper = mapper;
         }
+        
 
         [AllowAnonymous]
         [HttpPost("register")]

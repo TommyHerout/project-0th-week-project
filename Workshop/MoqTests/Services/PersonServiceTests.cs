@@ -1,12 +1,8 @@
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Workshop.Controllers;
 using Workshop.Models;
 using Workshop.Models.Dto.Requests;
-using Workshop.Services;
 using Workshop.Services.Interfaces;
 using Xunit;
 
@@ -39,9 +35,21 @@ namespace MoqTests
         [Fact]
         public void Register_Returns_NoInput()
         {
-            var user = new RegisterRequestDto {Name = null, Username = null, Password = null};
+            var user = new RegisterRequestDto();
             var mockUserService = new Mock<IPersonService>();
             mockUserService.Setup(m => m.Register(null)).Returns(() => null);
+            var controller = new CustomerController(mockUserService.Object, null, null, null);
+            var result = controller.Register(user);
+            Assert.IsType<BadRequestObjectResult>(result.Result);
+        }
+
+        [Fact]
+        public void Register_Returns_Already_Exists()
+        {
+            var person = new Person{Username = "tom"};
+            var user = new RegisterRequestDto{Username = "tom"};
+            var mockUserService = new Mock<IPersonService>();
+            mockUserService.Setup(m => m.FindPersonByUsername(person.Username)).ReturnsAsync(() => person);
             var controller = new CustomerController(mockUserService.Object, null, null, null);
             var result = controller.Register(user);
             Assert.IsType<BadRequestObjectResult>(result.Result);

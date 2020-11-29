@@ -10,6 +10,7 @@ using Workshop.Extensions;
 using Workshop.Models;
 using Workshop.Models.Dto;
 using Workshop.Models.Dto.Requests;
+using Workshop.Models.Dto.Responses;
 using Workshop.Services.Interfaces;
 
 namespace Workshop.Services
@@ -25,9 +26,17 @@ namespace Workshop.Services
             this.context = context;
         }
 
-        public async Task<IEnumerable<Person>> GetAllCustomers()
+        public async Task<IEnumerable<UserInfoResponse>> GetAllCustomersInfo()
         {
-            return await applicationDbContext.Persons.ToListAsync();
+            var allUsers = await applicationDbContext.Persons.Include(b => b.Books).ToListAsync();
+
+            var persons = allUsers!.Select(user => new UserInfoResponse
+            {
+                Name = user.Name,
+                Username = user.Username,
+                BorrowedBooks = user.Books.Count
+            });
+            return persons;
         }
 
         public async Task<Person> Register(Person person)

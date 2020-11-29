@@ -46,5 +46,12 @@ namespace Workshop.Controllers
             var response = await categoryService.AssignToCategory(request.BookId, request.CategoryId);
             return Ok(new AssignCategoryResponse(response));
         }
+
+        [HttpGet("all-customers-info")]
+        public async Task<ActionResult> GetAllCustomers()
+        {
+            var getAllBooks = personService.GetAllCustomersInfo();
+            return Ok(getAllBooks);
+        }
     }
 }
