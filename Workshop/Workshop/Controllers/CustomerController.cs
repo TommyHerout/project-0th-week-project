@@ -39,7 +39,7 @@ namespace Workshop.Controllers
             if (string.IsNullOrEmpty(register.Name) || string.IsNullOrEmpty(register.Username) ||
                 string.IsNullOrEmpty(register.Password))
             {
-                return BadRequest(new ErrorResponse(ErrorTypes.DataMissing.EnumDescription()));
+                return NotFound(new ErrorResponse(ErrorTypes.DataMissing.EnumDescription()));
             }
             var doesExists = await personService.FindPersonByUsername(register.Username);
             if (doesExists != null)

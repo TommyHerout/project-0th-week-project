@@ -50,7 +50,7 @@ namespace Workshop.Controllers
         [HttpGet("all-customers-info")]
         public async Task<ActionResult> GetAllCustomers()
         {
-            var getAllBooks = personService.GetAllCustomersInfo();
+            var getAllBooks = await personService.GetAllCustomersInfo();
             return Ok(getAllBooks);
         }
     }

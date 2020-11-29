@@ -47,9 +47,9 @@ namespace MoqTests
         public void Register_Returns_Already_Exists()
         {
             var person = new Person{Username = "tom"};
-            var user = new RegisterRequestDto{Username = "tom"};
+            var user = new RegisterRequestDto{Name = "tom", Username = "tom", Password = "tom"};
             var mockUserService = new Mock<IPersonService>();
-            mockUserService.Setup(m => m.FindPersonByUsername(person.Username)).ReturnsAsync(() => person);
+            mockUserService.Setup(m => m.FindPersonByUsername(person.Username)).ReturnsAsync(person);
             var controller = new CustomerController(mockUserService.Object, null, null, null);
             var result = controller.Register(user);
             Assert.IsType<BadRequestObjectResult>(result.Result);
